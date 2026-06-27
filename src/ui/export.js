@@ -5,6 +5,7 @@ import { toast } from './toast.js';
 import { exportFrames, exportSupportsSeamless } from '../capture/render.js';
 import { GifEncoder } from '../capture/gif.js';
 import { makeZip } from '../capture/zip.js';
+// mp4.js (with the mp4-muxer dependency) is lazy-loaded on first MP4 export
 
 /* ============================ export panel ============================ */
 
@@ -12,10 +13,11 @@ const FORMATS = [
   { k: 'png',    label: 'PNG' },
   { k: 'pngseq', label: 'PNG seq' },
   { k: 'gif',    label: 'GIF' },
+  { k: 'mp4',    label: 'MP4' },
 ];
 const FPS_OPTS = [12, 24, 30];
 const SIZE_OPTS = [1, 2];
-const ANIMATED = new Set(['pngseq', 'gif']);
+const ANIMATED = new Set(['pngseq', 'gif', 'mp4']);
 
 const sel = { format: 'gif', fps: 24, size: 1 };
 let busy = false;
@@ -87,6 +89,23 @@ async function exportGif(dur, seamless){
   toast('Saved GIF' + (seamless ? ' · seamless loop' : ''));
 }
 
+async function exportMp4Clip(dur, seamless){
+  const { exportMp4, hasWebCodecs } = await import('../capture/mp4.js');
+  if(!hasWebCodecs()){
+    toast('MP4 not supported here — try GIF or Record clip');
+    return;
+  }
+  try{
+    const blob = await exportMp4({ fps: sel.fps, dur, scale: sel.size, seamless, onProgress: setProgress });
+    downloadBlob(blob, `drift_${state.instrument}_${state.seed}.mp4`);
+    toast('Saved MP4' + (seamless ? ' · seamless loop' : ''));
+  }catch(err){
+    if(err && (err.message === 'no-webcodecs' || err.message === 'no-avc')){
+      toast('MP4 (H.264) unavailable here — try GIF or Record clip');
+    } else throw err;
+  }
+}
+
 async function exportPngSeq(dur, seamless){
   const files = [];
   await exportFrames({
@@ -114,6 +133,7 @@ async function run(){
       const seamless = $('#ex-seamless').checked && exportSupportsSeamless();
       setProgress(0);
       if(sel.format === 'gif') await exportGif(dur, seamless);
+      else if(sel.format === 'mp4') await exportMp4Clip(dur, seamless);
       else if(sel.format === 'pngseq') await exportPngSeq(dur, seamless);
     }
   }catch(err){
