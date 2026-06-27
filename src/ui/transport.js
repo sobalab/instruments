@@ -18,7 +18,8 @@ export function initTransport(){
 
   // keyboard
   window.addEventListener('keydown', e => {
-    if(e.target.tagName === 'INPUT' && e.target.type === 'range') return;
+    // ignore shortcuts while typing in a field (preset name, sliders, etc.)
+    if(e.target.tagName === 'INPUT' || e.target.isContentEditable) return;
     if(e.key === ' '){ e.preventDefault(); setPlaying(!state.playing); }
     else if(e.key === 'r' || e.key === 'R'){ $('#randomize').click(); }
     else if(e.key === 's' || e.key === 'S'){ $('#save').click(); }
