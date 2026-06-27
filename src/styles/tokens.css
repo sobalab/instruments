@@ -1,0 +1,20 @@
+/* ============================================================
+   DRIFT design tokens — the "drafting bench" identity.
+   Cool concrete chrome, one blueprint-blue accent, mono+grotesk.
+   ============================================================ */
+:root{
+  --paper:#d7dbde;      /* cool concrete panel */
+  --paper-2:#e9ecee;    /* lighter cards */
+  --paper-3:#c4c9cd;    /* recessed wells */
+  --ink:#16181b;        /* near-black: text + canvas */
+  --ink-2:#3a3f45;
+  --rule:#b4babe;       /* hairlines */
+  --rule-2:#9aa1a6;
+  --dim:#777e84;
+  --accent:#1f49e0;     /* plotter blueprint blue */
+  --accent-ink:#13207a;
+  --rec:#d63a3a;
+  --grotesk:'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --pad:18px;
+}

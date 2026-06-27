@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>DRIFT — generative plate studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Crect width='8' height='8' fill='%23d7dbde'/%3E%3Crect width='4' height='4' fill='%2316181b'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%2316181b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+  <!-- top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark"><span class="glyph"></span>DRIFT</span>
+      <span class="sub">generative plate studio</span>
+    </div>
+    <nav class="instruments" id="instruments" aria-label="Instrument"></nav>
+  </header>
+
+  <!-- stage -->
+  <main class="stage">
+    <section class="viewport">
+      <div class="plate" id="plate">
+        <canvas id="cv" width="1080" height="1080" aria-label="Generative plate"></canvas>
+        <span class="mark-c m-tl"></span><span class="mark-c m-tr"></span>
+        <span class="mark-c m-bl"></span><span class="mark-c m-br"></span>
+        <div class="overlay" id="overlay" role="button" tabindex="0" aria-label="Play">
+          <span class="play">▶ Play</span>
+        </div>
+      </div>
+      <div class="readout">
+        <span>ALGO·<b id="ro-algo">—</b></span>
+        <span>SEED·<b id="ro-seed">—</b></span>
+        <span>ƒ·<b id="ro-frame">0000</b></span>
+        <span>PLATE·<b id="ro-size">—</b></span>
+        <span class="rec-tag" id="ro-rec"><span class="rec-dot"></span>REC <b id="ro-rectime">0.0s</b></span>
+      </div>
+    </section>
+
+    <!-- console -->
+    <aside class="console">
+      <div class="group">
+        <h3 class="group-h">Instrument</h3>
+        <div id="params"></div>
+      </div>
+
+      <div class="group">
+        <h3 class="group-h">Plate</h3>
+        <div class="ctrl">
+          <div class="ctrl-row"><span class="ctrl-label">Aspect</span></div>
+          <div class="seg" id="aspect" role="group" aria-label="Aspect ratio"></div>
+        </div>
+        <div class="ctrl">
+          <label class="toggle">
+            <span class="ctrl-label">Invert</span>
+            <input type="checkbox" id="invert">
+            <span class="sw"></span>
+          </label>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl-row">
+            <span class="ctrl-label">Speed</span>
+            <span class="ctrl-val" id="speed-v">1.00×</span>
+          </div>
+          <input type="range" id="speed" min="0" max="3" step="0.05" value="1">
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- transport -->
+  <footer class="transport">
+    <button class="tbtn primary" id="play" aria-pressed="true">
+      <span class="ic" id="play-ic"></span><span id="play-label">Pause</span>
+    </button>
+    <button class="tbtn" id="randomize">↻ Randomize</button>
+    <button class="tbtn" id="reset">⟲ Reset</button>
+    <div class="spacer"></div>
+    <button class="tbtn" id="save">▤ Save frame</button>
+    <button class="tbtn rec" id="record" aria-pressed="false">● Record clip</button>
+    <span class="hint"><kbd>Space</kbd> play · <kbd>R</kbd> randomize · <kbd>S</kbd> save</span>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
