@@ -78,11 +78,16 @@ export function buildParams(values){
 }
 
 // params that change grid topology / seeded buffers require a re-init
+const REINIT_PARAMS = {
+  automata:  ['cell', 'states'],
+  dither:    ['cell'],
+  particles: ['count'],
+  wolfram:   ['cell', 'density'], // density reseeds the initial generation
+  bits:      ['cell'],            // density is a live column threshold
+};
 export function needsReinit(key){
-  if(['automata', 'dither', 'particles'].includes(state.instrument)){
-    return ['cell', 'states', 'count'].includes(key);
-  }
-  return false;
+  const keys = REINIT_PARAMS[state.instrument];
+  return keys ? keys.includes(key) : false;
 }
 
 export function buildAspect(){

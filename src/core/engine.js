@@ -63,11 +63,11 @@ function frame(ts){
   }
 
   const def = INSTRUMENTS[state.instrument];
-  // automata advances on its own step accumulator
-  if(state.instrument === 'automata' && state.inst){
-    state.inst.acc += dt * state.speed * state.params.rate;
+  // stepped instruments (CA-style) advance on their own step accumulator
+  if(def.step && state.inst){
+    state.inst.acc = (state.inst.acc || 0) + dt * state.speed * (state.params.rate || 1);
     let guard = 0;
-    while(state.inst.acc >= 1 && guard < 6){ def.step(b); state.inst.acc -= 1; guard++; }
+    while(state.inst.acc >= 1 && guard < 8){ def.step(b); state.inst.acc -= 1; guard++; }
   }
   def.draw(b, t);
   state.frame++;

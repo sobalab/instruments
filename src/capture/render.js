@@ -47,11 +47,11 @@ export async function exportFrames({ fps, dur, scale = 1, seamless = false, onFr
         t = k * dt * state.speed;
       }
 
-      // stateful automata advances its own step accumulator deterministically
-      if(state.instrument === 'automata' && state.inst){
-        state.inst.acc += dt * state.speed * state.params.rate;
+      // stepped instruments (CA-style) advance their step accumulator deterministically
+      if(def.step && state.inst){
+        state.inst.acc = (state.inst.acc || 0) + dt * state.speed * (state.params.rate || 1);
         let guard = 0;
-        while(state.inst.acc >= 1 && guard < 6){ def.step(b); state.inst.acc -= 1; guard++; }
+        while(state.inst.acc >= 1 && guard < 8){ def.step(b); state.inst.acc -= 1; guard++; }
       }
 
       def.draw(b, t);
