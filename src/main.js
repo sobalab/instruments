@@ -8,6 +8,7 @@ import { initLoop } from './ui/loop.js';
 import { initPresets } from './ui/presets.js';
 import { initExport } from './ui/export.js';
 import { initCapture } from './capture/capture.js';
+import { initLanding } from './ui/landing.js';
 import { hashToMoment } from './core/moment.js';
 
 /* ============================ boot ============================ */
@@ -32,6 +33,7 @@ function boot(){
   initPresets();
   initExport();
   initCapture();
+  initLanding();
 
   const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
   setPlaying(!reduced);

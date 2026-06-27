@@ -10,7 +10,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="app">
+<!-- landing -->
+<section class="landing" aria-label="About DRIFT">
+  <div class="landing-inner">
+    <p class="kicker">Generative plate studio · 7 instruments</p>
+    <h1 class="hero"><span class="hero-glyph"></span>DRIFT</h1>
+    <p class="lead">
+      A drafting bench for black-and-white generative moments. Pick an instrument,
+      fix a seed, and tune the plate until it reads. Every plate is reproducible
+      from its seed, shareable as a link, and ready to lift as a still or a clean loop.
+    </p>
+    <p class="lead lead-2">
+      Seven instruments — flow fields, cellular automata, dithered drift, digital rain —
+      on one strictly monochrome plate. Capture PNG, GIF, or MP4 for the deck.
+    </p>
+
+    <p class="examples-h">Example moments</p>
+    <div class="examples" id="examples"></div>
+
+    <a class="to-studio" id="to-studio" href="#studio">Open the studio ↓</a>
+  </div>
+</section>
+
+<div class="app" id="studio">
   <!-- top bar -->
   <header class="topbar">
     <div class="brand">
