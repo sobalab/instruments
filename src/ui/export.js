@@ -49,6 +49,7 @@ function buildSeg(host, items, getLabel, getValue, current, onPick){
 function refreshAnimVisibility(){
   const anim = ANIMATED.has(sel.format);
   document.querySelectorAll('.ex-anim').forEach(e => { e.style.display = anim ? '' : 'none'; });
+  document.querySelectorAll('.ex-still').forEach(e => { e.style.display = sel.format === 'png' ? '' : 'none'; });
 }
 
 function refreshSeamless(){
@@ -69,13 +70,36 @@ function setProgress(p){
 }
 
 async function exportStill(){
+  const alpha = $('#ex-alpha').checked;
   const out = document.createElement('canvas');
   out.width = state.W * sel.size; out.height = state.H * sel.size;
   const octx = out.getContext('2d'); octx.imageSmoothingEnabled = false;
-  octx.drawImage(cv, 0, 0, out.width, out.height);
+
+  if(alpha){
+    // build an ink-on-transparent matte: alpha = deviation from the background,
+    // RGB = the foreground ink colour, so it drops cleanly onto any slide.
+    const tmp = document.createElement('canvas'); tmp.width = state.W; tmp.height = state.H;
+    const tctx = tmp.getContext('2d', { willReadFrequently: true });
+    tctx.drawImage(cv, 0, 0);
+    const img = tctx.getImageData(0, 0, state.W, state.H);
+    const d = img.data;
+    const fg = state.invert ? 0 : 255;
+    for(let i = 0; i < d.length; i += 4){
+      const v = d[i];
+      d[i] = d[i + 1] = d[i + 2] = fg;
+      d[i + 3] = state.invert ? 255 - v : v;
+    }
+    tctx.putImageData(img, 0, 0);
+    octx.clearRect(0, 0, out.width, out.height);
+    octx.drawImage(tmp, 0, 0, out.width, out.height);
+  } else {
+    octx.drawImage(cv, 0, 0, out.width, out.height);
+  }
+
   const blob = await canvasToBlob(out, 'image/png');
-  downloadBlob(blob, `drift_${state.instrument}_${state.seed}@${sel.size}x.png`);
-  toast('Saved PNG · ' + sel.size + '×');
+  const tag = alpha ? '_alpha' : '';
+  downloadBlob(blob, `drift_${state.instrument}_${state.seed}@${sel.size}x${tag}.png`);
+  toast('Saved PNG' + (alpha ? ' · transparent' : '') + ' · ' + sel.size + '×');
 }
 
 async function exportGif(dur, seamless){
