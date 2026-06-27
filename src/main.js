@@ -6,6 +6,7 @@ import { initTransport } from './ui/transport.js';
 import { initShare } from './ui/share.js';
 import { initLoop } from './ui/loop.js';
 import { initPresets } from './ui/presets.js';
+import { initExport } from './ui/export.js';
 import { initCapture } from './capture/capture.js';
 import { hashToMoment } from './core/moment.js';
 
@@ -29,6 +30,7 @@ function boot(){
   initShare();
   initLoop();
   initPresets();
+  initExport();
   initCapture();
 
   const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;

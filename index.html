@@ -97,6 +97,41 @@
           <button class="tbtn" id="preset-save">Save</button>
         </div>
       </div>
+
+      <div class="group">
+        <h3 class="group-h">Export</h3>
+        <div class="ctrl">
+          <div class="ctrl-row"><span class="ctrl-label">Format</span></div>
+          <div class="seg" id="ex-format" role="group" aria-label="Export format"></div>
+        </div>
+        <div class="ctrl ex-anim">
+          <div class="ctrl-row"><span class="ctrl-label">Frame rate</span></div>
+          <div class="seg" id="ex-fps" role="group" aria-label="Frame rate"></div>
+        </div>
+        <div class="ctrl ex-anim">
+          <div class="ctrl-row">
+            <span class="ctrl-label">Duration</span>
+            <span class="ctrl-val" id="ex-dur-v">3.0s</span>
+          </div>
+          <input type="range" id="ex-dur" min="1" max="10" step="0.5" value="3">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl-row"><span class="ctrl-label">Size</span></div>
+          <div class="seg" id="ex-size" role="group" aria-label="Export size"></div>
+        </div>
+        <div class="ctrl ex-anim">
+          <label class="toggle">
+            <span class="ctrl-label">Seamless loop</span>
+            <input type="checkbox" id="ex-seamless">
+            <span class="sw"></span>
+          </label>
+        </div>
+        <button class="tbtn primary ex-go" id="ex-go">▼ Export</button>
+        <div class="ex-progress" id="ex-progress" hidden>
+          <div class="ex-bar"><span id="ex-bar-fill"></span></div>
+          <span class="ex-pct" id="ex-pct">0%</span>
+        </div>
+      </div>
     </aside>
   </main>
 

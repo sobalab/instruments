@@ -26,6 +26,7 @@ export function selectInstrument(key){
   buildParams();
   reinit();
   scheduleHashWrite();
+  window.dispatchEvent(new CustomEvent('drift:instrument'));
 }
 
 // build the param controls. `values` optionally overrides each param's default
@@ -125,4 +126,5 @@ export function applyMoment(m){
   syncLoopControls();
   resizePlate();
   reinit();
+  window.dispatchEvent(new CustomEvent('drift:instrument'));
 }

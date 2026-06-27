@@ -220,6 +220,14 @@ input[type=range]:focus-visible{outline:2px solid var(--accent); outline-offset:
 #preset-name:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
 #preset-save{flex:0 0 auto; padding:7px 13px}
 
+/* ---------- export ---------- */
+.ex-go{width:100%; justify-content:center; margin-top:4px}
+.ex-go:disabled{opacity:.5; cursor:default}
+.ex-progress{display:flex; align-items:center; gap:10px; margin-top:10px}
+.ex-bar{flex:1; height:4px; background:var(--paper-3); border:1px solid var(--rule-2); border-radius:2px; overflow:hidden}
+.ex-bar > span{display:block; height:100%; width:0; background:var(--accent); transition:width .12s linear}
+.ex-pct{font-size:10.5px; color:var(--accent-ink); font-variant-numeric:tabular-nums; min-width:34px; text-align:right}
+
 /* ---------- transport ---------- */
 .transport{
   display:flex; align-items:center; gap:10px; flex-wrap:wrap;

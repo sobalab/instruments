@@ -28,8 +28,8 @@ export function reinit(){
   $('#ro-seed').textContent = state.seed;
 }
 
-// instruments whose live preview can loop seamlessly (pure functions of time)
-const FIELD_LOOPABLE = new Set(['strokes', 'ascii', 'dither']);
+// instruments whose preview/export can loop seamlessly (pure functions of time)
+export const FIELD_LOOPABLE = new Set(['strokes', 'ascii', 'dither']);
 
 // per-frame hook (used by capture to update the REC readout) — keeps capture
 // decoupled from the engine loop.
