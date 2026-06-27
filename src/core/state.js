@@ -20,6 +20,7 @@ export const state = {
   inst: null,        // per-instrument working state
   params: {},        // live param values for the active instrument
   bridge: null,      // the object handed to instrument init/draw/step
+  loop: { on: false, dur: 6 },  // seamless-loop mode + duration (seconds)
 };
 
 // monochrome palette — inverted swaps fg/bg. Canvas stays strictly 1-bit by default.
