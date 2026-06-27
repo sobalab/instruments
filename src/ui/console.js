@@ -3,6 +3,7 @@ import { state, ASPECTS } from '../core/state.js';
 import { INSTRUMENTS } from '../instruments/index.js';
 import { reinit, resizePlate } from '../core/engine.js';
 import { scheduleHashWrite } from './share.js';
+import { syncLoopControls } from './loop.js';
 
 /* ============================ console builders ============================ */
 
@@ -121,6 +122,7 @@ export function applyMoment(m){
   buildParams(m.params);
   buildAspect();
   syncPlateControls();
+  syncLoopControls();
   resizePlate();
   reinit();
 }

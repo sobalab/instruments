@@ -19,6 +19,7 @@ export function reinit(){
   const def = INSTRUMENTS[state.instrument];
   state.bridge = {
     W: state.W, H: state.H, seed: state.seed, noise: state.noise,
+    loop: { on: false },
     get p(){ return state.params; },
     get inst(){ return state.inst; }, set inst(v){ state.inst = v; },
   };
@@ -26,6 +27,9 @@ export function reinit(){
   $('#ro-algo').textContent = def.label.toLowerCase();
   $('#ro-seed').textContent = state.seed;
 }
+
+// instruments whose live preview can loop seamlessly (pure functions of time)
+const FIELD_LOOPABLE = new Set(['strokes', 'ascii', 'dither']);
 
 // per-frame hook (used by capture to update the REC readout) — keeps capture
 // decoupled from the engine loop.
@@ -39,16 +43,33 @@ function frame(ts){
   let dt = (ts - last) / 1000; last = ts; if(dt > 0.1) dt = 0.1;
   if(!state.playing) return;
   state.clock += dt * state.speed;
-  state.bridge.W = state.W; state.bridge.H = state.H;
+  const b = state.bridge;
+  b.W = state.W; b.H = state.H;
+
+  // loop phase: τ = phase·P feeds the loopable field instruments so the visual
+  // depends only on phase (a true seamless loop). Others keep continuous time.
+  let t = state.clock;
+  if(state.loop.on){
+    const P = state.loop.dur;
+    const phase = (((state.clock % P) + P) % P) / P;
+    const fieldLoop = FIELD_LOOPABLE.has(state.instrument);
+    b.loop = { on: fieldLoop, P, phase };
+    if(fieldLoop) t = phase * P;
+    $('#ro-loop').textContent = Math.round(phase * 100) + '%';
+    $('#ro-looptag').classList.add('on');
+  } else {
+    b.loop = { on: false };
+    $('#ro-looptag').classList.remove('on');
+  }
 
   const def = INSTRUMENTS[state.instrument];
   // automata advances on its own step accumulator
   if(state.instrument === 'automata' && state.inst){
     state.inst.acc += dt * state.speed * state.params.rate;
     let guard = 0;
-    while(state.inst.acc >= 1 && guard < 6){ def.step(state.bridge); state.inst.acc -= 1; guard++; }
+    while(state.inst.acc >= 1 && guard < 6){ def.step(b); state.inst.acc -= 1; guard++; }
   }
-  def.draw(state.bridge, state.clock);
+  def.draw(b, t);
   state.frame++;
   $('#ro-frame').textContent = String(state.frame % 10000).padStart(4, '0');
   if(frameHook) frameHook();

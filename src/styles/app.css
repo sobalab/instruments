@@ -118,6 +118,9 @@ canvas#cv{
 .readout b{color:var(--ink); font-weight:600}
 .readout .rec-tag{color:var(--rec); display:none; align-items:center; gap:6px}
 .readout .rec-tag.on{display:inline-flex}
+.readout .loop-tag{color:var(--accent-ink); display:none}
+.readout .loop-tag.on{display:inline}
+.loop-hint{display:block; margin-top:2px; line-height:1.5}
 .readout .rec-dot{width:8px;height:8px;border-radius:50%;background:var(--rec);
   animation:pulse 1s steps(2) infinite}
 @keyframes pulse{50%{opacity:.25}}

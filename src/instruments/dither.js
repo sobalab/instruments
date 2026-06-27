@@ -1,6 +1,7 @@
 import { ctx, buf, bctx } from '../core/canvas.js';
 import { state, colors } from '../core/state.js';
 import { clamp, defGrid } from '../core/utils.js';
+import { loopN } from '../core/looptime.js';
 
 /* 4 — dithered drift: horizontally streaking 1-bit noise (Bayer 4x4) */
 export const dither = {
@@ -24,11 +25,14 @@ export const dither = {
     const c = colors();
     const fx = s.p.scale * 0.05 / s.p.streak, fy = s.p.scale * 0.05;
     const tm = t * 0.25, dx = t * s.p.drift * 0.6;
+    const vdx = s.p.drift * 0.6, vtm = 0.25; // velocities of the dx / tm offsets
+    const fbmS = (x, y) => s.noise.fbm(x, y, 4);
+    const n2S = (x, y) => s.noise.noise2(x, y);
     for(let y = 0; y < gh; y++){
       for(let x = 0; x < gw; x++){
-        let n = s.noise.fbm((x * fx) + dx, (y * fy) - tm * 0.3, 4);
+        let n = loopN(s, fbmS, (x * fx) + dx, (y * fy) - tm * 0.3, vdx, -0.3 * vtm);
         // slight vertical contour warp
-        n = 0.5 * n + 0.5 * s.noise.noise2(x * fx * 0.5 + dx * 0.4, y * fy * 1.6 + tm * 0.2);
+        n = 0.5 * n + 0.5 * loopN(s, n2S, x * fx * 0.5 + dx * 0.4, y * fy * 1.6 + tm * 0.2, vdx * 0.4, 0.2 * vtm);
         n = clamp(Math.pow(n, s.p.gamma), 0, 1);
         const thr = (BAYER[(y & 3) * 4 + (x & 3)] + 0.5) / 16;
         let v = n > thr ? 255 : 0;

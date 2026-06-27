@@ -1,6 +1,7 @@
 import { ctx } from '../core/canvas.js';
 import { state, colors } from '../core/state.js';
 import { clamp, defGrid } from '../core/utils.js';
+import { loopN } from '../core/looptime.js';
 
 /* 2 — ascii density field: monospace ramp marbling along noise */
 export const ascii = {
@@ -23,13 +24,16 @@ export const ascii = {
     ctx.fillStyle = c.bg; ctx.fillRect(0, 0, s.W, s.H);
     ctx.font = `${Math.round(sy * 0.92)}px ${getComputedStyle(document.body).getPropertyValue('--mono')}`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    const f = s.p.scale * 0.02, tm = t * 0.2, w = s.p.warp;
+    const f = s.p.scale * 0.02, tm = t * 0.2, w = s.p.warp, vt = 0.2; // vt = d(tm)/dt
+    const n2S = (x, y) => s.noise.noise2(x, y);
+    const fbmS = (x, y) => s.noise.fbm(x, y, 4);
     for(let j = 0; j < gh; j++){
       for(let i = 0; i < gw; i++){
-        // domain warp for the marbling look
-        const wx = s.noise.noise2(i * f + 5, j * f - tm) - 0.5;
-        const wy = s.noise.noise2(i * f - 7, j * f + tm) - 0.5;
-        let b = s.noise.fbm(i * f + wx * w + tm * 0.5, j * f + wy * w, 4);
+        // domain warp for the marbling look (looped so the warp itself is periodic)
+        const wx = loopN(s, n2S, i * f + 5, j * f - tm, 0, -vt) - 0.5;
+        const wy = loopN(s, n2S, i * f - 7, j * f + tm, 0, vt) - 0.5;
+        // outer field loops on its explicit time term (tm*0.5 -> velocity 0.5*vt)
+        let b = loopN(s, fbmS, i * f + wx * w + tm * 0.5, j * f + wy * w, 0.5 * vt, 0);
         b = clamp(Math.pow(b, s.p.gamma), 0, 1);
         const idx = Math.min(ramp.length - 1, Math.floor(b * ramp.length));
         const ch = ramp[idx]; if(ch === ' ') continue;
