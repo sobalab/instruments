@@ -20,8 +20,10 @@ export const strokes = {
     ctx.fillStyle = c.bg; ctx.fillRect(0, 0, s.W, s.H);
     ctx.strokeStyle = c.fg; ctx.lineWidth = s.p.thin; ctx.lineCap = 'round';
     ctx.beginPath();
-    const f = s.p.scale * 0.012, tm = t * 0.18, vt = 0.18; // vt = d(tm)/dt, for seamless looping
-    const fbmS = (x, y) => s.noise.fbm(x, y, 3);
+    // low-frequency, low-octave field so adjacent strokes stay correlated and
+    // comb into a coherent flow rather than pointing every-which-way.
+    const f = s.p.scale * 0.005, tm = t * 0.18, vt = 0.18; // vt = d(tm)/dt, for seamless looping
+    const fbmS = (x, y) => s.noise.fbm(x, y, 2);
     const n2S = (x, y) => s.noise.noise2(x, y);
     for(let j = 0; j < gh; j++){
       for(let i = 0; i < gw; i++){
